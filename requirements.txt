@@ -1,0 +1,13 @@
+# Core científico e IA
+torch
+
+# Manipulação de dados
+pandas
+numpy
+scikit-learn
+
+# Visualização
+matplotlib
+
+# Para baixar os requerimentos, colar no terminal:
+# pip install -r requirements.txt
