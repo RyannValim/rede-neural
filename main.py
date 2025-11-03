@@ -3,7 +3,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
-
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -43,7 +42,7 @@ def preprocessar_dados(caminho_csv: str):
         X, y, test_size=0.30, random_state=SEED, stratify=y
     )
 
-    print(f"Tamanho do treino: {X_treino.shape}, Tamanho do teste: {X_teste.shape}")
+    print(f"Tamanho do treino: {X_treino.shape}\nTamanho do teste: {X_teste.shape}")
     return X_treino, X_teste, y_treino, y_teste
 
 # 2) Modelo de Rede Neural MLP
@@ -58,7 +57,7 @@ class MLP(nn.Module):
             nn.Linear(32, 16),
             funcao_ativacao(),
             nn.Linear(16, 1),
-            nn.Sigmoid(),  # saída binária
+            nn.Sigmoid(),
         )
 
     def forward(self, x):
@@ -66,7 +65,8 @@ class MLP(nn.Module):
 
 # 3) Treinamento do modelo (sem plots)
 def treinar_modelo(X_treino, y_treino, X_teste, y_teste, funcao_ativacao, epocas=50, batch_size=32, lr=1e-3):
-    print(f"\nTreinando com ativação: {funcao_ativacao.__name__}")
+    print("\n"+"*"*50)
+    print(f"Treinando com ativação: {funcao_ativacao.__name__}")
 
     # tensores
     X_treino_t = torch.tensor(X_treino.values, dtype=torch.float32)
@@ -119,6 +119,7 @@ def treinar_modelo(X_treino, y_treino, X_teste, y_teste, funcao_ativacao, epocas
     print(resultados.head(10))
     print("\nTotal de acertos:", (resultados["Aprovado_Real"] == resultados["Aprovado_Previsto"]).sum())
     print("Total de erros:",   (resultados["Aprovado_Real"] != resultados["Aprovado_Previsto"]).sum())
+    print("*"*50)
 
     y_true = resultados["Aprovado_Real"].to_numpy()
     y_pred = resultados["Aprovado_Previsto"].to_numpy()
@@ -136,7 +137,6 @@ def plot_curvas(hist_dict, titulo, ylabel):
     plt.tight_layout()
     plt.show()
     plt.close(fig)
-
 
 def plot_matriz_confusao(y_true, y_pred, titulo):
     fig, ax = plt.subplots(figsize=(6, 5))
@@ -183,7 +183,7 @@ def comparar_ativacoes(X_treino, y_treino, X_teste, y_teste, epocas=50):
     for nome, val in acuracia_media.items():
         print(f"{nome}: {val:.4f}")
 
-    print(f"\n🔹 Melhor função identificada automaticamente: {melhor['nome']} (acc média = {melhor['acc']:.4f})")
+    print(f"\nMelhor função identificada automaticamente: {melhor['nome']} (acc média = {melhor['acc']:.4f})")
     return melhor
 
 # 6) Execução principal
@@ -200,6 +200,3 @@ if __name__ == "__main__":
         melhor["y_pred"],
         f"Matriz de Confusão Final - {melhor['nome']}"
     )
-
-    plt.close("all")
-    print("✅ Execução completa!")
